@@ -9,8 +9,8 @@ import subprocess
 
 CAMERA_INDEX = 1           # Change to 1 for second camera
 SEGMENT_DURATION_MS = 30 * 1000   # 30 seconds
-WIDTH = 2592
-HEIGHT = 1080
+WIDTH = 4608
+HEIGHT = 2592
 FRAMERATE = 6
 BITRATE = 1000000           # 1 Mbps
 
