@@ -1,36 +1,38 @@
-import RPi.GPIO as GPIO
+
+from gpiozero import DigitalInputDevice
+from signal import pause
+from datetime import datetime
+import csv
 import os
-import time
 
-BEAM_PIN = 27
+# GPIO pin (BCM numbering)
+beam = DigitalInputDevice(27, pull_up=True)
 
-mc1_pin = 27
-#mc2_pin
-#mc3_pin
-#mc4_pin
-#mc5_pin
+LOG_FILE = "beam_log.csv"
 
-try:
-    f = open('/home/bombus/chamber-01/forage-activity.csv', 'a+', 0)
-    if os.stat('/home/bombus/chamber-01/forage-activity.csv').st_size == 0:
-        f.write('date,time,sensor,status\n')
-except:
-    pass
+# Create file with header if it doesn't exist
+if not os.path.exists(LOG_FILE):
+    with open(LOG_FILE, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["timestamp", "event"])
 
-gate_1 = 'mc-entrance'
+def log_event(event_type):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    with open(LOG_FILE, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([timestamp, event_type])
+    
+    print(f"{timestamp} - {event_type}")
 
-def break_beam_callback(channel):
-    if GPIO.input(BEAM_PIN):
-        f.write('{},{},{},{}\n'.format(time.strftime('%m/%d/%y'), time.strftime('%H:%M:%S'), gate_1, 'clear'))
-        print("beam unbroken")
-    else:
-        f.write('{},{},{},{}\n'.format(time.strftime('%m/%d/%y'), time.strftime('%H:%M:%S'), gate_1, 'bee detected'))
-        print("beam broken")
-            
+def beam_broken():
+    log_event("BROKEN")
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(BEAM_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(BEAM_PIN, GPIO.BOTH, callback=break_beam_callback)
+def beam_restored():
+    log_event("RESTORED")
 
-message = input("Press enter to quit\n\n")
-GPIO.cleanup()
+beam.when_deactivated = beam_broken
+beam.when_activated = beam_restored
+
+print("Logging IR break beam events to beam_log.csv...")
+pause()
