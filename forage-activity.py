@@ -26,10 +26,10 @@ def log_event(event_type):
     print(f"{timestamp} - {event_type}")
 
 def beam_broken():
-    log_event("BROKEN")
+    log_event("FORAGER-DETECTED")
 
 def beam_restored():
-    log_event("RESTORED")
+    log_event("CLEAR")
 
 beam.when_deactivated = beam_broken
 beam.when_activated = beam_restored
