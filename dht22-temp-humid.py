@@ -6,7 +6,7 @@ from datetime import datetime
 
 # --- Setup DHT22 on GPIO4 ---
 # Adjust as needed for whichever GPIO pin is used (be sure to enable w1 in raspiconfig)
-dht_device = adafruit_dht.DHT22(board.D4)
+dht_device = adafruit_dht.DHT22(board.D17)
 
 # --- CSV file name ---
 csv_file = "/home/bombus/chamber-01/nest-temps.csv"
