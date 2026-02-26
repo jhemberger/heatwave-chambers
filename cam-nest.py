@@ -7,7 +7,7 @@ import subprocess
 # CONFIGURATION
 # -------------------------
 
-CAMERA_INDEX = 1           # Change to 1 for second camera
+CAMERA_INDEX = 0           # Change to 1 for second camera
 SEGMENT_DURATION_MS = 30 * 1000   # 30 seconds
 WIDTH = 4608
 HEIGHT = 2592
